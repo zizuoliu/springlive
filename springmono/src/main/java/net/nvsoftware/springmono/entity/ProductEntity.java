@@ -1,11 +1,13 @@
-package net.nvsoftware.springmono.model;
+package net.nvsoftware.springmono.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@JsonIgnoreProperties({"title", "description"})
-public class Product {
-    @JsonIgnore
+@Entity
+@Table(name="product_tb")
+public class ProductEntity {
+    @Id
     private String productId;
     private String title;
     private String description;
