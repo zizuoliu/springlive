@@ -18,4 +18,21 @@ public class ProductServiceImpl implements ProductService {
         productList.add(product);
         return product;
     }
+
+    @Override
+    public List<Product> getAll() {
+        return productList;
+    }
+
+    @Override
+    public Product getById(String id) {
+        return productList.stream().filter(product -> product.getProductId().equals(id)).findFirst().get();
+    }
+
+    @Override
+    public String deleteById(String id) {
+        Product product = productList.stream().filter(e -> e.getProductId().equals(id)).findFirst().get();
+        productList.remove(product);
+        return "Deleted Product with id: " + id;
+    }
 }
