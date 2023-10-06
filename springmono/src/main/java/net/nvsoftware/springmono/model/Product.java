@@ -1,9 +1,14 @@
 package net.nvsoftware.springmono.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"title", "description"})
 public class Product {
+    @JsonIgnore
     private String productId;
     private String title;
-    private String decription;
+    private String description;
 
     public String getProductId() {
         return productId;
@@ -21,11 +26,11 @@ public class Product {
         this.title = title;
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String decription) {
+        this.description = decription;
     }
 }
