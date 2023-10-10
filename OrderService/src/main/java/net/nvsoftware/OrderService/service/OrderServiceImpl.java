@@ -10,6 +10,7 @@ import net.nvsoftware.OrderService.model.PaymentRequest;
 import net.nvsoftware.OrderService.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 
@@ -22,6 +23,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductServiceFeignClient productServiceFeignClient;
     @Autowired
     private PaymentServiceFeignClient paymentServiceFeignClient;
+
+    private RestTemplate restTemplate = new RestTemplate();
     @Override
     public long placeOrder(OrderRequest orderRequest) { //TODO: transaction
         log.info("Start: OrderService placeOrder");
@@ -70,11 +73,18 @@ public class OrderServiceImpl implements OrderService {
         log.info("Start: OrderService getOrderDetailById");
         OrderEntity orderEntity = orderRepository.findById(orderId)
                         .orElseThrow(() -> new RuntimeException("OrderService getOrderDetailById: Order Not Found with id: " + orderId));
+
+        OrderResponse.ProductResponse productResponse = restTemplate.getForObject(
+                "http://localhost:8001/product/" + orderEntity.getProductId(),
+                OrderResponse.ProductResponse.class
+        );
+
         OrderResponse orderResponse = OrderResponse.builder()
                 .orderId(orderEntity.getId())
                 .orderStatus(orderEntity.getOrderStatus())
                 .orderDate(orderEntity.getOrderDate())
                 .totalAmount(orderEntity.getTotalAmount())
+                .productResponse(productResponse)
                 .build();
 
         log.info("End: OrderService getOrderDetailById");
