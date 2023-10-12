@@ -18,7 +18,7 @@ public class SecurityConfiguration {
                 .and()
                 .oauth2ResourceServer()
                 .jwt();
-        Okta.configureResourceServer401ResponseBody(http);
+        //Okta.configureResourceServer401ResponseBody(http);
         return http.build();
     }
 }
