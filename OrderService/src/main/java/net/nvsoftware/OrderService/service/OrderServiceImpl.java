@@ -76,12 +76,12 @@ public class OrderServiceImpl implements OrderService {
                         .orElseThrow(() -> new RuntimeException("OrderService getOrderDetailById: Order Not Found with id: " + orderId));
 
         OrderResponse.ProductResponse productResponse = restTemplate.getForObject(
-                "http://localhost:8001/product/" + orderEntity.getProductId(),
+                "http://PRODUCT-SERVICE/product/" + orderEntity.getProductId(),
                 OrderResponse.ProductResponse.class
         );
 
         OrderResponse.PaymentResponse paymentResponse  = restTemplate.getForObject(
-                "http://localhost:8003/payment/" + orderEntity.getId(),
+                "http://PAYMENT-SERVICE/payment/" + orderEntity.getId(),
                 OrderResponse.PaymentResponse.class
         );
 
