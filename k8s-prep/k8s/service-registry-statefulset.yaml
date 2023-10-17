@@ -16,6 +16,7 @@ spec:
       containers:
       - name: eureka
         image: calebliu2014/service-registry
+        imagePullPolicy: Always
         ports:
         - containerPort: 8050
 

@@ -11,7 +11,7 @@ spec:
     - ReadWriteOnce
   storageClassName: manual
   hostPath:
-    path: "/mnt/data"
+    path: "/data/mysql"
     type: DirectoryOrCreate
 
 ---
@@ -39,7 +39,7 @@ spec:
     matchLabels:
       app: mysql
   serviceName: mysql
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
