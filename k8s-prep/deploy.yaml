@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-registry-app
+spec:
+  selector:
+    matchLabels:
+      app: service-registry-app
+  template:
+    metadata:
+      labels:
+        app: service-registry-app
+    spec:
+      containers:
+      - name: service-registry-app
+        image: calebliu2014/service-registry
+        ports:
+        - containerPort: 8050
