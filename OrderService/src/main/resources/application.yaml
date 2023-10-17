@@ -14,7 +14,7 @@ spring:
   application:
     name: order-service
   config:
-    import: configserver:http://${SERVER_URL:localhost}:8051
+    import: configserver:${CONFIG_SERVER:http://localhost:8051}
 
 resilience4j:
   circuitbreaker:
