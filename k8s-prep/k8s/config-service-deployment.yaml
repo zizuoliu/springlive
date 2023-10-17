@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service-app
+spec:
+  selector:
+    matchLabels:
+      app: config-service-app
+  template:
+    metadata:
+      labels:
+        app: config-service-app
+    spec:
+      containers:
+      - name: config-service-app
+        image: calebliu2014/config-service
+        ports:
+        - containerPort: 8051
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-service-svc
+spec:
+  selector:
+    app: config-service-app
+  ports:
+  - port: 80
+    targetPort: 8051
+
