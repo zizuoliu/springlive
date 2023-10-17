@@ -16,6 +16,13 @@ spec:
         image: calebliu2014/config-service
         ports:
         - containerPort: 8051
+        env:
+          - name: EUREKA_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_server
+                name: eureka-cm
+
 
 ---
 

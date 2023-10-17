@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eureka-cm
+data:
+  eureka_server: "http://eureka-0.eureka:8050/eureka"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-cm
+data:
+  config_server: "http://config-service-svc"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-cm
+data:
+  db_host: "mysql-0.mysql"
