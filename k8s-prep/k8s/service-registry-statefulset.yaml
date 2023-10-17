@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: eureka
   serviceName: "eureka"
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -31,6 +31,7 @@ spec:
     app: eureka
   ports:
   - port: 8050
+    name: eureka
 
 ---
 
