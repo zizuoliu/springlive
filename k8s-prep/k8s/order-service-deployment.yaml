@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-app
+spec:
+  selector:
+    matchLabels:
+      app: order-service-app
+  template:
+    metadata:
+      labels:
+        app: order-service-app
+    spec:
+      containers:
+      - name: order-service-app
+        image: calebliu2014/order-service
+        ports:
+        - containerPort: 8002
+        env:
+          - name: EUREKA_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_server
+                name: eureka-cm
+          - name: CONFIG_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: config_server
+                name: config-cm
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: db_host
+                name: mysql-cm
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-svc
+spec:
+  selector:
+    app: order-service-app
+  ports:
+  - port: 80
+    targetPort: 8002

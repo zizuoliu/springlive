@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-app
+spec:
+  selector:
+    matchLabels:
+      app: api-gateway-app
+  template:
+    metadata:
+      labels:
+        app: api-gateway-app
+    spec:
+      containers:
+      - name: api-gateway-app
+        image: calebliu2014/api-gateway
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 8052
+        env:
+          - name: EUREKA_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_server
+                name: eureka-cm
+          - name: CONFIG_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: config_server
+                name: config-cm
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: api-gateway-app
+  ports:
+  - port: 80
+    targetPort: 8052
