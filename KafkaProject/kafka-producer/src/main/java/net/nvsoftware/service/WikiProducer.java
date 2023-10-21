@@ -15,12 +15,12 @@ public class WikiProducer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendMsg() throws InterruptedException {
+    public void startSendMsg() throws InterruptedException {
         EventHandler eventHandler = new WikiProducerHelper(kafkaTemplate, "wiki");
         EventSource eventSource = new EventSource.Builder(eventHandler, URI.create("https://stream.wikimedia.org/v2/stream/recentchange"))
                 .build();
         eventSource.start();
 
-        TimeUnit.SECONDS.sleep(15);
+        TimeUnit.SECONDS.sleep(5);
     }
 }
