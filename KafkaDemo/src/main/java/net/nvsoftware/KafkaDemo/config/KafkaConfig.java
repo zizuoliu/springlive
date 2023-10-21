@@ -8,7 +8,12 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaConfig {
     @Bean
-    public NewTopic topic() {
+    public NewTopic topicAmazon() {
         return TopicBuilder.name("amazon").build();
+    }
+
+    @Bean
+    public NewTopic topicGoogle() {
+        return TopicBuilder.name("google").build();
     }
 }
