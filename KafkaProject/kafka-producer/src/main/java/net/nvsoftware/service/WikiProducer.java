@@ -21,6 +21,6 @@ public class WikiProducer {
                 .build();
         eventSource.start();
 
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(30);
     }
 }
