@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import net.nvsoftware.OrderService.client.PaymentServiceFeignClient;
 import net.nvsoftware.OrderService.client.ProductServiceFeignClient;
 import net.nvsoftware.OrderService.entity.OrderEntity;
+import net.nvsoftware.OrderService.model.OrderEvent;
 import net.nvsoftware.OrderService.model.OrderRequest;
 import net.nvsoftware.OrderService.model.OrderResponse;
 import net.nvsoftware.OrderService.model.PaymentRequest;
@@ -23,7 +24,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductServiceFeignClient productServiceFeignClient;
     @Autowired
     private PaymentServiceFeignClient paymentServiceFeignClient;
-
+    @Autowired
+    private OrderProducerService orderProducerService;
     @Autowired
     private RestTemplate restTemplate;
     @Override
@@ -66,6 +68,36 @@ public class OrderServiceImpl implements OrderService {
 
         // call PaymentService to charge, if Success, mark order PAID, else CANCELLED
         log.info("End: OrderService placeOrder Done with orderId: " + orderEntity.getId());
+        return orderEntity.getId();
+    }
+
+    @Override
+    public long placeOrder2(OrderRequest orderRequest) {
+        log.info("Start: OrderService placeOrder2");
+        // use OrderService to create OrderEntity with status CREATED, ORM JPA save to database
+        OrderEntity orderEntity = OrderEntity.builder()
+                .productId(orderRequest.getProductId())
+                .quantity(orderRequest.getQuantity())
+                .totalAmount(orderRequest.getTotalAmount())
+                .orderDate(Instant.now())
+                .orderStatus("CREATED")
+                .build();
+        orderRepository.save(orderEntity);
+        log.info("Process: OrderService placeOrder2 save orderEntity with orderId: " + orderEntity.getId());
+
+        // call ProductService to check product quantity, if ok, reduce it, else throw not enough
+        // call PaymentService to charge, if Success, mark order PAID, else CANCELLED
+        // use kafka publish the orderEvent/orderMsg and let ProductService and PaymentService to consume
+        OrderEvent orderEvent = OrderEvent.builder()
+                .orderId(orderEntity.getId())
+                .productId(orderRequest.getProductId())
+                .quantity(orderRequest.getQuantity())
+                .paymentMode(orderRequest.getPaymentMode())
+                .totalAmount(orderRequest.getTotalAmount())
+                .build();
+        orderProducerService.sendMsg(orderEvent);
+
+        log.info("End: OrderService placeOrder2 Done with orderId: " + orderEntity.getId());
         return orderEntity.getId();
     }
 
