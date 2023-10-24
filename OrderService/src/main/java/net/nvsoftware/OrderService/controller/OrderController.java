@@ -19,17 +19,23 @@ public class OrderController {
     @PostMapping("/placeOrder")
     public ResponseEntity<Long> placeOrder(@RequestBody OrderRequest orderRequest) {
         log.info("Start: OrderService Controller placeOrder");
-        long orderId = orderService.placeOrder(orderRequest);
+        for (int i = 0; i < 10000; i++) {
+            long orderId = orderService.placeOrder(orderRequest);
+        }
         log.info("End: OrderService Controller placeOrder");
-        return new ResponseEntity<>(orderId, HttpStatus.OK);
+        long tempId = 12;
+        return new ResponseEntity<>(tempId, HttpStatus.OK);
     }
 
     @PostMapping("/placeOrder2")
     public ResponseEntity<Long> placeOrder2(@RequestBody OrderRequest orderRequest) {
         log.info("Start: OrderService Controller placeOrder2");
-        long orderId = orderService.placeOrder2(orderRequest);
+        for (int i = 0; i < 10000; i++) {
+            long orderId = orderService.placeOrder2(orderRequest);
+        }
         log.info("End: OrderService Controller placeOrder2");
-        return new ResponseEntity<>(orderId, HttpStatus.OK);
+        long tempId = 12;
+        return new ResponseEntity<>(tempId, HttpStatus.OK);
     }
 
     @GetMapping("/{orderId}")
