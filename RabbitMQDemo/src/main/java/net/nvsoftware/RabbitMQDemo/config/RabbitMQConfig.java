@@ -19,6 +19,12 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.routing.key}")
     private String routingKey;
 
+    @Value("${rabbitmq.queue.json.name}")
+    private String jsonQueueName;
+
+    @Value("${rabbitmq.routing.json.key}")
+    private String jsonRoutingKey;
+
     @Bean
     public Queue queue() {
         return new Queue(queueName);
@@ -39,7 +45,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue jsonQueue(){
-        return new Queue("${rabbitmq.queue.json.name}");
+        return new Queue(jsonQueueName);
     }
 
     @Bean
@@ -47,7 +53,7 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(jsonQueue())
                 .to(exchange())
-                .with("${rabbitmq.routing.json.key}");
+                .with(jsonRoutingKey);
     }
 
     @Bean
