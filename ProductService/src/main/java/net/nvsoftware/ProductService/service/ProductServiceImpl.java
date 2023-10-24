@@ -1,8 +1,8 @@
 package net.nvsoftware.ProductService.service;
 
 import lombok.extern.log4j.Log4j2;
+import net.nvsoftware.OrderService.model.OrderEvent;
 import net.nvsoftware.ProductService.entity.ProductEntity;
-import net.nvsoftware.ProductService.model.OrderEvent;
 import net.nvsoftware.ProductService.model.ProductRequest;
 import net.nvsoftware.ProductService.model.ProductResponse;
 import net.nvsoftware.ProductService.repository.ProductRepository;
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     public void reduceQuantity2(OrderEvent orderEvent) {
         log.info("Consume: " + orderEvent.toString());
 
-        long id = orderEvent.getOrderId();
+        long id = orderEvent.getProductId();
         long quantity = orderEvent.getQuantity();
 
         log.info("Consume Start: ProductService reduceQuantity with id: " + id + " quantity: " + quantity);
