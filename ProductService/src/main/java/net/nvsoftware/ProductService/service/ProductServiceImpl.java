@@ -2,11 +2,13 @@ package net.nvsoftware.ProductService.service;
 
 import lombok.extern.log4j.Log4j2;
 import net.nvsoftware.ProductService.entity.ProductEntity;
+import net.nvsoftware.ProductService.model.OrderEvent;
 import net.nvsoftware.ProductService.model.ProductRequest;
 import net.nvsoftware.ProductService.model.ProductResponse;
 import net.nvsoftware.ProductService.repository.ProductRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -52,5 +54,26 @@ public class ProductServiceImpl implements ProductService {
         productEntity.setQuantity(productEntity.getQuantity() - quantity);
         productRepository.save(productEntity);
         log.info("End: ProductService reduceQuantity with id: " + id + " quantity: " + quantity);
+    }
+
+    @KafkaListener(topics = "order", groupId = "product")
+    public void reduceQuantity2(OrderEvent orderEvent) {
+        log.info("Consume: " + orderEvent.toString());
+
+        long id = orderEvent.getOrderId();
+        long quantity = orderEvent.getQuantity();
+
+        log.info("Consume Start: ProductService reduceQuantity with id: " + id + " quantity: " + quantity);
+
+        ProductEntity productEntity = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("reduceQuantity: Product Not Found with id: " + id));
+
+        if (productEntity.getQuantity() < quantity) {
+            throw new RuntimeException("reduceQuantity: Product Not Enough with id: " + id);
+        }
+
+        productEntity.setQuantity(productEntity.getQuantity() - quantity);
+        productRepository.save(productEntity);
+        log.info("Consume End: ProductService reduceQuantity with id: " + id + " quantity: " + quantity);
     }
 }
